@@ -175,7 +175,7 @@ func (c *BatchConsumer) Add(d Data) error {
 	c.bufferMutex.Lock()
 	c.buffer = append(c.buffer, d)
 	c.bufferMutex.Unlock()
-	if len(c.buffer) >= c.batchSize || len(c.cacheBuffer) > 0 {
+	if len(c.buffer) >= c.batchSize || len(c.cacheBuffer) > 0 {//如果缓冲区数据溢出，或者缓存区有数据都要先上报
 		err := c.Flush()
 		return err
 	}
@@ -188,7 +188,7 @@ func (c *BatchConsumer) Flush() error {
 	}
 
 	defer func() {
-		if len(c.cacheBuffer) > c.cacheCapacity {
+		if len(c.cacheBuffer) > c.cacheCapacity {//如果缓存区数据达到上限，则抛弃第一块数据.不然网络一直错误将会造成阻塞
 			c.cacheBuffer = c.cacheBuffer[1:]
 		}
 	}()
@@ -196,7 +196,7 @@ func (c *BatchConsumer) Flush() error {
 	c.cacheMutex.Lock()
 	defer c.cacheMutex.Unlock()
 	c.bufferMutex.Lock()
-	if len(c.cacheBuffer) == 0 || len(c.buffer) >= c.batchSize {
+	if len(c.cacheBuffer) == 0 || len(c.buffer) >= c.batchSize {//如果缓存区没数据，获取缓冲区数据溢出，则将缓冲区数据存入缓存区
 		c.cacheBuffer = append(c.cacheBuffer, c.buffer)
 		c.buffer = make([]Data, 0, c.batchSize)
 	}
@@ -208,8 +208,8 @@ func (c *BatchConsumer) Flush() error {
 	if err == nil {
 		for i := 0; i < 3; i++ {
 			statusCode, code, _ := c.send(string(jdata), len(buffer))
-			if statusCode == 200 {//缓存区索引后移
-				c.cacheBuffer = c.cacheBuffer[1:]
+			if statusCode == 200 {
+				c.cacheBuffer = c.cacheBuffer[1:]//缓存区索引后移
 				switch code {
 				case 0:
 					return nil
@@ -227,17 +227,18 @@ func (c *BatchConsumer) Flush() error {
 			if c.shuShuServerUrl!="" {//如果配置了数数的地址
 				statusCode, code, err := c.sendToShuShu(string(jdata), len(buffer))
 				if statusCode == 200 {//缓存区索引后移
+					c.cacheBuffer = c.cacheBuffer[1:]
 					switch code {
 					case 0:
 						return nil
 					case 1, -1:
-						return fmt.Errorf("ThinkingDataError:invalid data format")
+						return fmt.Errorf("herodataError:invalid data format")
 					case -2:
-						return fmt.Errorf("ThinkingDataError:APP ID doesn't exist")
+						return fmt.Errorf("herodataError:APP ID doesn't exist")
 					case -3:
-						return fmt.Errorf("ThinkingDataError:invalid ip transmission")
+						return fmt.Errorf("herodataError:invalid ip transmission")
 					default:
-						return fmt.Errorf("ThinkingDataError:unknown error")
+						return fmt.Errorf("herodataError:unknown error")
 					}
 				}
 				if err != nil {

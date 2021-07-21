@@ -10,8 +10,8 @@ func main() {
 	// 创建按小时切分的 log consumer, 日志文件存放在当前目录
 	// 创建按天切分的 log consumer, 不设置单个日志上限
 	config := herodata.LogConfig{
-		FileNamePrefix: "test",
-		Directory:      "/usr/log",
+		FileNamePrefix: "event",
+		Directory:      "/var/log/hero_data",
 	}
 	consumer, _ := herodata.NewLogConsumerWithConfig(config)
 	ta := herodata.New(consumer)
