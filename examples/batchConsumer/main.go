@@ -11,14 +11,14 @@ func main() {
 	wg := sync.WaitGroup{}
 	// 创建 BatchConsumer, 指定接收端地址、APP ID、上报批次
 	config := herodata.BatchConfig{
-		ServerUrl:     "hero-url", //必填
+		ServerUrl:     "http://127.0.0.1:8089/api/sync/index", //必填
 		AppId:         "test",
 		ShuShuServerUrl: "", //推送数数科技，可选
 		ShuShuAppId:     "",
 		AutoFlush:     true,
 		BatchSize:     100,
 		Interval:      5,
-		Compress:true,
+		Compress:false,
 	}
 	consumer, err := herodata.NewBatchConsumerWithConfig(config)
 	if err != nil {
@@ -48,9 +48,9 @@ func main() {
 				"time_now": time.Now(),
 				// "#ip" 属性是系统预置属性，如果服务端中能获取用户 IP 地址，并填入该属性，数数会自动根据 IP 地址解析用户的省份、城市信息
 				"#ip": "123.123.123.123",
-				"id":  "12",
+				"id":  "1212",
 				//#uuid  去重，服务端比较稳定，可不填，如果填，按照以下标准8-4-4-4-12的String()
-				"#uuid":   "6ba7b810-9dad-2233-80b4-00c04fd430c8",
+				"#uuid":   "61111111",
 				"catalog": "p",
 				"bool":    true,
 				"aa":      12,

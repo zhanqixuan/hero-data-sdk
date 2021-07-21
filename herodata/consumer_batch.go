@@ -335,7 +335,7 @@ func (c *BatchConsumer) send(data string, size int) (statusCode int, code int, e
 	postData := bytes.NewBufferString(encodedData)
 	var resp *http.Response
 	req, _ := http.NewRequest("POST", c.serverUrl, postData)
-	req.Header["appid"] = []string{c.shuShuAppId}
+	req.Header["appid"] = []string{c.appId}
 	req.Header.Set("user-agent", "hero-go-sdk")
 	req.Header.Set("version", SdkVersion)
 	req.Header.Set("compress", compressType)
