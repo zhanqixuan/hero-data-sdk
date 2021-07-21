@@ -332,7 +332,6 @@ func (c *BatchConsumer) send(data string, size int) (statusCode int, code int, e
 		return 0, 0, err
 	}
 	postData := bytes.NewBufferString(encodedData)
-	fmt.Println(c.serverUrl)
 	var resp *http.Response
 	req, _ := http.NewRequest("POST", c.serverUrl, postData)
 	req.Header["appid"] = []string{c.shuShuAppId}
