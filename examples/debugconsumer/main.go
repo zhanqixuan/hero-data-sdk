@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"hero_data_sdk/herodata"
+	"github.com/zhanqixuan/hero-data-sdk/herodata"
 	"time"
 )
 

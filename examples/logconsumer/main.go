@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/herodataAnalytics/go-sdk/herodata"
+	"github.com/zhanqixuan/hero-data-sdk/herodata"
 	"time"
 )
 
