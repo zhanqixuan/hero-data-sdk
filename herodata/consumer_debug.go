@@ -26,14 +26,14 @@ func NewDebugConsumerWithWriter( serverUrl string, appId string,shuShuServerUrl 
 	if serverUrl == "" {
 		return nil, errors.New("serverUrl不能为空")
 	}
-	u, err := url.Parse(serverUrl)
+	u, err := url.Parse(shuShuServerUrl)
 	if err != nil {
 		return nil, err
 	}
 
 	u.Path = "/data_debug"
 
-	c := &DebugConsumer{ serverUrl: u.String(), appId: appId,shuShuServerUrl: shuShuServerUrl, shuShuAppId: shuShuAppId, writeData: writeData}
+	c := &DebugConsumer{ serverUrl: serverUrl, appId: appId,shuShuServerUrl: u.String(), shuShuAppId: shuShuAppId, writeData: writeData}
 	return c, nil
 }
 

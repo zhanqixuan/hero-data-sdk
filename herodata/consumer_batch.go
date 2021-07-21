@@ -107,7 +107,7 @@ func initBatchConsumer(config BatchConfig) (Consumer, error) {
 		return nil, errors.New(fmt.Sprint("ServerUrl 不能为空"))
 	}
 	//数数的为可选
-	u, err := url.Parse(config.ServerUrl)
+	u, err := url.Parse(config.ShuShuServerUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -137,9 +137,9 @@ func initBatchConsumer(config BatchConfig) (Consumer, error) {
 	}
 
 	c := &BatchConsumer{
-		serverUrl:     u.String(),
+		serverUrl:     config.ServerUrl,
 		appId:         config.AppId,
-		shuShuServerUrl: config.ShuShuServerUrl,
+		shuShuServerUrl: u.String(),
 		shuShuAppId:     config.ShuShuAppId,
 		timeout:       time.Duration(timeout) * time.Millisecond,
 		compress:      config.Compress,
@@ -207,7 +207,7 @@ func (c *BatchConsumer) Flush() error {
 	jdata, err := json.Marshal(buffer)
 	if err == nil {
 		for i := 0; i < 3; i++ {
-			statusCode, code, err := c.send(string(jdata), len(buffer))
+			statusCode, code, _ := c.send(string(jdata), len(buffer))
 			if statusCode == 200 {//缓存区索引后移
 				c.cacheBuffer = c.cacheBuffer[1:]
 				switch code {
@@ -223,11 +223,7 @@ func (c *BatchConsumer) Flush() error {
 					return fmt.Errorf("herodataError:unknown error")
 				}
 			}
-			if err != nil {
-				if i == 2 {
-					return err
-				}
-			}
+
 			if c.shuShuServerUrl!="" {//如果配置了数数的地址
 				statusCode, code, err := c.sendToShuShu(string(jdata), len(buffer))
 				if statusCode == 200 {//缓存区索引后移
@@ -336,9 +332,8 @@ func (c *BatchConsumer) send(data string, size int) (statusCode int, code int, e
 		return 0, 0, err
 	}
 	postData := bytes.NewBufferString(encodedData)
-
-	var resp *http.Response
 	fmt.Println(c.serverUrl)
+	var resp *http.Response
 	req, _ := http.NewRequest("POST", c.serverUrl, postData)
 	req.Header["appid"] = []string{c.shuShuAppId}
 	req.Header.Set("user-agent", "hero-go-sdk")
