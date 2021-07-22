@@ -11,9 +11,14 @@ func main() {
 	// 创建按天切分的 log consumer, 不设置单个日志上限
 	config := herodata.LogConfig{
 		FileNamePrefix: "event",
-		Directory:      "/var/log/hero_data",
+		Directory:      "/var/log/hero_data",     //必填
+		SecondDir:      "/var/log/hero_data_bak", //可选，备用日志地址，如果需要可以填写
 	}
-	consumer, _ := herodata.NewLogConsumerWithConfig(config)
+	consumer, err := herodata.NewLogConsumerWithConfig(config)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 	ta := herodata.New(consumer)
 
 	ta.SetSuperProperties(map[string]interface{}{
