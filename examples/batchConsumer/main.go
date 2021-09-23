@@ -11,7 +11,7 @@ func main() {
 	wg := sync.WaitGroup{}
 	// 创建 BatchConsumer, 指定接收端地址、APP ID、上报批次
 	config := herodata.BatchConfig{
-		ServerUrl:     "http://127.0.0.1:8089/api/sync/index", //必填
+		ServerUrl:     "http://receiver.gmedata.com/api/sync/index", //必填
 		AppId:         "test",
 		ShuShuServerUrl: "", //推送数数科技，可选
 		ShuShuAppId:     "",
