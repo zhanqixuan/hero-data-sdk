@@ -106,12 +106,17 @@ func initBatchConsumer(config BatchConfig) (Consumer, error) {
 	if config.ServerUrl == "" {
 		return nil, errors.New(fmt.Sprint("ServerUrl 不能为空"))
 	}
-	//数数的为可选
-	u, err := url.Parse(config.ShuShuServerUrl)
-	if err != nil {
-		return nil, err
+	shushuUrl:=""
+	if config.ShuShuServerUrl!="" {
+		//数数的为可选
+		u, err := url.Parse(config.ShuShuServerUrl)
+		if err != nil {
+			return nil, err
+		}
+		u.Path = "/sync_server"
+		shushuUrl = u.String()
 	}
-	u.Path = "/sync_server"
+
 
 	var batchSize int
 	if config.BatchSize > MaxBatchSize {
@@ -139,7 +144,7 @@ func initBatchConsumer(config BatchConfig) (Consumer, error) {
 	c := &BatchConsumer{
 		serverUrl:     config.ServerUrl,
 		appId:         config.AppId,
-		shuShuServerUrl: u.String(),
+		shuShuServerUrl: shushuUrl,
 		shuShuAppId:     config.ShuShuAppId,
 		timeout:       time.Duration(timeout) * time.Millisecond,
 		compress:      config.Compress,
