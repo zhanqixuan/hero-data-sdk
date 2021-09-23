@@ -45,7 +45,7 @@ func main() {
 			distinct_id := "ABCDEF123456"
 			properties := map[string]interface{}{
 				// "#time" 属性是系统预置属性，传入 datetime 对象，表示事件发生的时间，如果不填入该属性，则默认使用系统当前时间
-				"time_now": time.Now(),
+				"time_now": time.Now().Unix(),
 				// "#ip" 属性是系统预置属性，如果服务端中能获取用户 IP 地址，并填入该属性，数数会自动根据 IP 地址解析用户的省份、城市信息
 				"#ip": "123.123.123.123",
 				"id":  "1212",

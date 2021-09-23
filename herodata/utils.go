@@ -22,8 +22,8 @@ func mergeProperties(target, source map[string]interface{}) {
 }
 
 func extractTime(p map[string]interface{}) string {
-	if t, ok := p["#time"]; ok {
-		delete(p, "#time")
+	if t, ok := p["time"]; ok {
+		delete(p, "time")
 		switch v := t.(type) {
 		case string:
 			return v
