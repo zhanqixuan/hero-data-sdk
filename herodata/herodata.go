@@ -22,16 +22,16 @@ const (
 
 // 数据信息
 type Data struct {
-	AccountId    string                 `json:"account_id,omitempty"`
-	DistinctId   string                 `json:"distinct_id,omitempty"`
-	Type         string                 `json:"type"`
-	Time         string                 `json:"time"`
-	EventName    string                 `json:"event_name,omitempty"`
-	EventId      string                 `json:"event_id,omitempty"`
-	FirstCheckId string                 `json:"first_check_id,omitempty"`
-	Ip           string                 `json:"ip,omitempty"`
-	UUID         string                 `json:"uuid,omitempty"`
-	Properties   map[string]interface{} `json:"properties"`
+	AccountId    string                 `json:"#account_id,omitempty"`
+	DistinctId   string                 `json:"#distinct_id,omitempty"`
+	Type         string                 `json:"#type"`
+	Time         string                 `json:"#time"`
+	EventName    string                 `json:"#event_name,omitempty"`
+	EventId      string                 `json:"#event_id,omitempty"`
+	FirstCheckId string                 `json:"#first_check_id,omitempty"`
+	Ip           string                 `json:"#ip,omitempty"`
+	UUID         string                 `json:"#uuid,omitempty"`
+	Properties   map[string]interface{} `json:"#properties"`
 }
 
 // Consumer 为数据实现 IO 操作（写入磁盘或者发送到接收端）
@@ -100,8 +100,8 @@ func (ta *TDAnalytics) track(accountId, distinctId, dataType, eventName, eventId
 	}
 
 	p := ta.GetSuperProperties()
-	p["lib"] = LibName
-	p["lib_version"] = SdkVersion
+	p["#lib"] = LibName
+	p["#lib_version"] = SdkVersion
 
 	mergeProperties(p, properties)
 
@@ -170,15 +170,15 @@ func (ta *TDAnalytics) add(accountId, distinctId, dataType, eventName, eventId s
 	}
 
 	// 获取 properties 中 ip 值, 如不存在则返回 ""
-	ip := extractStringProperty(properties, "ip")
+	ip := extractStringProperty(properties, "#ip")
 
 	// 获取 properties 中 time 值, 如不存在则返回当前时间
 	eventTime := extractTime(properties)
 
-	firstCheckId := extractStringProperty(properties, "first_check_id")
+	firstCheckId := extractStringProperty(properties, "#first_check_id")
 
 	//如果上传uuid， 只支持UUID标准格式xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx的string类型
-	uuid := extractStringProperty(properties, "uuid")
+	uuid := extractStringProperty(properties, "#uuid")
 
 	data := Data{
 		AccountId:    accountId,
